@@ -37,7 +37,36 @@ async function fetchCountry() {
      STEP 3: Show "Loading..."
      ------------------------------------------------------------ */
   showLoading();
-  try {
+  
+
+    //STEP 4 - FETCH REQUEST
+    try {
+      const API_KEY = 'rc_live_8d60993c77434eb3847c8cc373b54a88';
+      const url = `https://api.restcountries.com/countries/v5?q=${encodeURIComponent(countryName)}` + `&response_fields=names.common,capitals,region,population,languages,flag.url_png,flag.description`;
+      await fetch (url, {
+        headers: { Authorization: 'Bearer ${API_KEY}' },
+      });
+      if (!response.ok) {
+        throw new Error("Country not found");
+      }
+      //STEP 5 - CONVERT TO JSON
+      const data = await response.json();
+      const objects = data.data.objects;
+      if (!objects || objects.length === 0) {
+        throw new Error('Country not found');
+      }
+      const country = objects[0];
+
+      //STEP 6: DISPLAY COUNTRY NAME
+
+      countryNameEl.textContent = country.names.common;
+
+    hideLoading(); resultCard.classList.add('hidden'); errorEl.textContent = `We couldn't find "${countryName}". Check the spelling and try again.`; errorEl.classList.remove('hidden'); console.error(error);
+
+    } catch(error){
+      //HANDLE THIS LATER
+    }
+  }
     /* ------------------------------------------------------------
        STEP 4: Build the fetch request
        ------------------------------------------------------------
